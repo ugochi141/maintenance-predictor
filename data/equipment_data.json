@@ -1,0 +1,28 @@
+{
+  "equipment": [
+    {
+      "id": "EQ001",
+      "name": "Roche Cobas 8000",
+      "type": "Chemistry Analyzer",
+      "install_date": "2020-01-15",
+      "last_maintenance": "2023-12-15",
+      "next_scheduled": "2024-03-15",
+      "usage_hours": 18250,
+      "error_count": 23,
+      "failure_probability": 0.15,
+      "status": "operational"
+    },
+    {
+      "id": "EQ002",
+      "name": "Sysmex XN-9000",
+      "type": "Hematology Analyzer",
+      "install_date": "2021-06-01",
+      "last_maintenance": "2024-01-01",
+      "next_scheduled": "2024-04-01",
+      "usage_hours": 8760,
+      "error_count": 8,
+      "failure_probability": 0.08,
+      "status": "operational"
+    }
+  ]
+}
