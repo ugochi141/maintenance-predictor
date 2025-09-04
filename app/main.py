@@ -1,25 +1,27 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
+from prometheus_client import make_asgi_app
 
-# Configure logging
+# Project: maintenance-predictor
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Starting up maintenance-predictor...")
+    logger.info("Starting maintenance-predictor service...")
     yield
-    logger.info("Shutting down maintenance-predictor...")
+    logger.info("Shutting down maintenance-predictor service...")
 
 app = FastAPI(
     title="maintenance-predictor",
-    description="Predictive maintenance system for laboratory equipment using machine learning",
-    version="1.0.0",
+    description="Production-ready healthcare IT system",
+    version="2.0.0",
     lifespan=lifespan
 )
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -28,22 +30,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Metrics endpoint
+metrics_app = make_asgi_app()
+app.mount("/metrics", metrics_app)
+
 @app.get("/")
 async def root():
     return {
-        "project": "maintenance-predictor",
+        "service": "maintenance-predictor",
         "status": "operational",
-        "description": "Predictive maintenance system for laboratory equipment using machine learning"
+        "version": "2.0.0"
     }
 
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
 
-@app.get("/api/v1/status")
-async def api_status():
-    return {
-        "api_version": "v1",
-        "status": "operational",
-        "endpoints_available": True
-    }
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await websocket.send_text(f"Echo: {data}")
+    except:
+        pass
